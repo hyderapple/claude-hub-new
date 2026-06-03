@@ -1,8 +1,13 @@
 {
-  "name": "claude-hud",
-  "version": "0.0.12",
-  "description": "Real-time statusline HUD for Claude Code",
+  "name": "claude-hub-new",
+  "version": "0.1.0",
+  "description": "Statusline HUD for Claude Code with a context-aware tutorial/hint bar. Fork of claude-hud by Jarrod Watts.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyderapple/claude-hub-new.git"
+  },
+  "homepage": "https://github.com/hyderapple/claude-hub-new",
   "main": "dist/index.js",
   "files": [
     "dist/",
@@ -21,9 +26,14 @@
   "keywords": [
     "claude-code",
     "statusline",
-    "hud"
+    "hud",
+    "tutorial",
+    "tips"
   ],
-  "author": "Jarrod Watts",
+  "author": "hyderapple",
+  "contributors": [
+    "Jarrod Watts (original claude-hud author)"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

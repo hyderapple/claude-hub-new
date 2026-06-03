@@ -1,8 +1,21 @@
 # Changelog
 
-All notable changes to Claude HUD will be documented in this file.
+All notable changes to claude-hub-new will be documented in this file.
+claude-hub-new is a fork of [claude-hud](https://github.com/jarrodwatts/claude-hud); entries below 0.1.0 are inherited from upstream.
 
-## [Unreleased]
+## [0.1.0] - 2026-06-03
+
+### Added
+- **Tutorial / hint bar** (`tutorial` element, on by default): a context-aware line that
+  suggests `/compact` when context is high, flags uncommitted git changes, and warns on
+  high 5h/7d rate-limit usage; when nothing is urgent it rotates curated Claude Code tips
+  (English + Traditional Chinese) on a time-based, flicker-free schedule.
+- `tutorial` config block: `enabled`, `rotateSeconds`, `contextThreshold`, `rateThreshold`, `extraTips`.
+- `label.tip` / `label.hint` i18n keys.
+
+### Changed
+- Rebranded from `claude-hud` to `claude-hub-new` (plugin name, command prefix `claude-hub-new:setup`,
+  runtime config dir `~/.claude/plugins/claude-hub-new/`). Original MIT copyright retained.
 
 ## [0.0.12] - 2026-04-04
 

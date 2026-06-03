@@ -1,7 +1,7 @@
 // Shared debug logging utility
-// Enable via: DEBUG=claude-hud or DEBUG=*
+// Enable via: DEBUG=claude-hub-new or DEBUG=*
 
-const DEBUG = process.env.DEBUG?.includes('claude-hud') || process.env.DEBUG === '*';
+const DEBUG = process.env.DEBUG?.includes('claude-hub-new') || process.env.DEBUG === '*';
 
 /**
  * Create a namespaced debug logger
@@ -10,7 +10,7 @@ const DEBUG = process.env.DEBUG?.includes('claude-hud') || process.env.DEBUG ===
 export function createDebug(namespace: string) {
   return function debug(msg: string, ...args: unknown[]): void {
     if (DEBUG) {
-      console.error(`[claude-hud:${namespace}] ${msg}`, ...args);
+      console.error(`[claude-hub-new:${namespace}] ${msg}`, ...args);
     }
   };
 }

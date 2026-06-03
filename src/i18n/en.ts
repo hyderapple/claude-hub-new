@@ -9,6 +9,8 @@ export const en: Messages = {
   "label.rules": "rules",
   "label.hooks": "hooks",
   "label.estimatedCost": "Est.",
+  "label.tip": "Tip",
+  "label.hint": "Hint",
 
   // Status
   "status.limitReached": "Limit reached",
@@ -23,7 +25,7 @@ export const en: Messages = {
   "format.tokPerSec": "tok/s",
 
   // Init
-  "init.initializing": "[claude-hud] Initializing...",
+  "init.initializing": "[claude-hub-new] Initializing...",
   "init.macosNote":
-    "[claude-hud] Note: On macOS, you may need to restart Claude Code for the HUD to appear.",
+    "[claude-hub-new] Note: On macOS, you may need to restart Claude Code for the HUD to appear.",
 };

@@ -10,7 +10,7 @@ export type ContextValueMode = 'percent' | 'tokens' | 'remaining' | 'both';
  *   short:   Strip context suffix AND "Claude " prefix (e.g. "Opus 4.6")
  */
 export type ModelFormatMode = 'full' | 'compact' | 'short';
-export type HudElement = 'project' | 'context' | 'usage' | 'memory' | 'environment' | 'tools' | 'agents' | 'todos';
+export type HudElement = 'project' | 'context' | 'usage' | 'memory' | 'environment' | 'tutorial' | 'tools' | 'agents' | 'todos';
 export type HudColorName = 'dim' | 'red' | 'green' | 'yellow' | 'magenta' | 'cyan' | 'brightBlue' | 'brightMagenta';
 /** A color value: named preset, 256-color index (0-255), or hex string (#rrggbb). */
 export type HudColorValue = HudColorName | number | string;
@@ -28,12 +28,28 @@ export interface HudColorOverrides {
     custom: HudColorValue;
 }
 export declare const DEFAULT_ELEMENT_ORDER: HudElement[];
+/**
+ * Tutorial / hint bar settings. The bar surfaces context-aware hints
+ * (high priority) and otherwise rotates general tips on a timer.
+ */
+export interface TutorialConfig {
+    enabled: boolean;
+    /** Seconds each tip/hint stays before rotating (>= 1). */
+    rotateSeconds: number;
+    /** Context-window used-% at/above which to suggest /compact (0-100). */
+    contextThreshold: number;
+    /** Rate-limit used-% at/above which to warn about quota (0-100). */
+    rateThreshold: number;
+    /** User-supplied tips, shown before the built-in ones. */
+    extraTips: string[];
+}
 export interface HudConfig {
     language: Language;
     lineLayout: LineLayoutType;
     showSeparators: boolean;
     pathLevels: 1 | 2 | 3;
     elementOrder: HudElement[];
+    tutorial: TutorialConfig;
     gitStatus: {
         enabled: boolean;
         showDirty: boolean;

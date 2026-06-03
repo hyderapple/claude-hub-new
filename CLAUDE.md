@@ -108,7 +108,7 @@ Lines 1-2 always shown. Additional lines are opt-in via config:
 
 The plugin manifest is in `.claude-plugin/plugin.json` (metadata only - name, description, version, author).
 
-**StatusLine configuration** must be added to the user's `~/.claude/settings.json` via `/claude-hud:setup`.
+**StatusLine configuration** must be added to the user's `~/.claude/settings.json` via `/claude-hub-new:setup`.
 
 The setup command adds an auto-updating command that finds the latest installed version at runtime.
 

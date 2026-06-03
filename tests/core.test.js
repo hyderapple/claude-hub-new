@@ -19,7 +19,7 @@ function restoreEnvVar(name, value) {
 }
 
 async function getTranscriptCacheFile(configDir) {
-  const cacheDir = path.join(configDir, 'plugins', 'claude-hud', 'transcript-cache');
+  const cacheDir = path.join(configDir, 'plugins', 'claude-hub-new', 'transcript-cache');
   const files = await readdir(cacheDir);
   assert.equal(files.length, 1, `expected exactly one transcript cache file in ${cacheDir}`);
   return path.join(cacheDir, files[0]);
@@ -410,7 +410,7 @@ test('parseTranscript aggregates tools, agents, and todos', async () => {
 });
 
 test('parseTranscript accumulates session token usage from assistant messages', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'session-tokens.jsonl');
   const lines = [
     JSON.stringify({
@@ -453,7 +453,7 @@ test('parseTranscript accumulates session token usage from assistant messages', 
 });
 
 test('parseTranscript ignores malformed session token values', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'session-tokens-malformed.jsonl');
   const lines = [
     JSON.stringify({
@@ -496,7 +496,7 @@ test('parseTranscript ignores malformed session token values', async () => {
 });
 
 test('TaskCreate taskId is preserved across TodoWrite and usable by TaskUpdate', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'taskid-preserve.jsonl');
   const lines = [
     JSON.stringify({
@@ -531,7 +531,7 @@ test('TaskCreate taskId is preserved across TodoWrite and usable by TaskUpdate',
 });
 
 test('TodoWrite without prior TaskCreate works as before (no regression)', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'todowrite-only.jsonl');
   const lines = [
     JSON.stringify({
@@ -565,7 +565,7 @@ test('TodoWrite without prior TaskCreate works as before (no regression)', async
 });
 
 test('parseTranscript prefers custom title over slug for session name', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'session-name-custom-title.jsonl');
   const lines = [
     JSON.stringify({ type: 'user', slug: 'auto-slug-1' }),
@@ -584,7 +584,7 @@ test('parseTranscript prefers custom title over slug for session name', async ()
 });
 
 test('parseTranscript falls back to latest slug when custom title is missing', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'session-name-slug.jsonl');
   const lines = [
     JSON.stringify({ type: 'user', slug: 'auto-slug-1' }),
@@ -609,7 +609,7 @@ test('parseTranscript returns empty result when file is missing', async () => {
 });
 
 test('parseTranscript tolerates malformed lines', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'malformed.jsonl');
   const lines = [
     '{"timestamp":"2024-01-01T00:00:00.000Z","message":{"content":[{"type":"tool_use","id":"tool-1","name":"Read"}]}}',
@@ -630,7 +630,7 @@ test('parseTranscript tolerates malformed lines', async () => {
 });
 
 test('parseTranscript extracts tool targets for common tools', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'targets.jsonl');
   const lines = [
     JSON.stringify({
@@ -658,7 +658,7 @@ test('parseTranscript extracts tool targets for common tools', async () => {
 });
 
 test('parseTranscript truncates long bash commands in targets', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'bash.jsonl');
   const longCommand = 'echo ' + 'x'.repeat(50);
   const lines = [
@@ -681,7 +681,7 @@ test('parseTranscript truncates long bash commands in targets', async () => {
 });
 
 test('parseTranscript handles edge-case lines and error statuses', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'edge-cases.jsonl');
   const lines = [
     '   ',
@@ -712,7 +712,7 @@ test('parseTranscript handles edge-case lines and error statuses', async () => {
 });
 
 test('parseTranscript detects agents recorded with the Agent tool name', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'agent-tool-name.jsonl');
   const lines = [
     JSON.stringify({
@@ -748,7 +748,7 @@ test('parseTranscript detects agents recorded with the Agent tool name', async (
 });
 
 test('parseTranscript returns undefined targets for unknown tools', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const filePath = path.join(dir, 'unknown-tools.jsonl');
   const lines = [
     JSON.stringify({
@@ -770,7 +770,7 @@ test('parseTranscript returns undefined targets for unknown tools', async () => 
 });
 
 test('parseTranscript returns partial results when stream creation fails', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-'));
   const transcriptDir = path.join(dir, 'transcript-dir');
   await mkdir(transcriptDir);
 
@@ -783,11 +783,11 @@ test('parseTranscript returns partial results when stream creation fails', async
 });
 
 test('parseTranscript does not cache partial results when stream creation fails after file state lookup', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-transcript-cache-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-transcript-cache-'));
   const configDir = path.join(dir, '.claude-test');
   const transcriptPath = path.join(dir, 'stream-failure.jsonl');
   const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
-  const cacheDir = path.join(configDir, 'plugins', 'claude-hud', 'transcript-cache');
+  const cacheDir = path.join(configDir, 'plugins', 'claude-hub-new', 'transcript-cache');
 
   process.env.CLAUDE_CONFIG_DIR = configDir;
   await writeFile(transcriptPath, '{"timestamp":"2024-01-01T00:00:00.000Z"}\n', 'utf8');
@@ -807,7 +807,7 @@ test('parseTranscript does not cache partial results when stream creation fails 
 });
 
 test('parseTranscript reuses cached data when transcript state is unchanged', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-transcript-cache-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-transcript-cache-'));
   const configDir = path.join(dir, '.claude-test');
   const transcriptPath = path.join(dir, 'cache-hit.jsonl');
   const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
@@ -840,7 +840,7 @@ test('parseTranscript reuses cached data when transcript state is unchanged', as
 });
 
 test('parseTranscript invalidates cached data when transcript state changes', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-transcript-cache-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-transcript-cache-'));
   const configDir = path.join(dir, '.claude-test');
   const transcriptPath = path.join(dir, 'cache-invalidate.jsonl');
   const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
@@ -875,7 +875,7 @@ test('parseTranscript invalidates cached data when transcript state changes', as
 });
 
 test('parseTranscript falls back to a fresh parse when the transcript cache is corrupted', async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hud-transcript-cache-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-transcript-cache-'));
   const configDir = path.join(dir, '.claude-test');
   const transcriptPath = path.join(dir, 'cache-corrupt.jsonl');
   const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
@@ -904,8 +904,8 @@ test('parseTranscript falls back to a fresh parse when the transcript cache is c
 });
 
 test('countConfigs honors project and global config locations', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
-  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-project-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
+  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-project-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -948,8 +948,8 @@ test('countConfigs honors project and global config locations', async () => {
 });
 
 test('countConfigs returns outputStyle with project local precedence', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
-  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-project-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
+  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-project-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -983,7 +983,7 @@ test('countConfigs returns outputStyle with project local precedence', async () 
 });
 
 test('countConfigs uses CLAUDE_CONFIG_DIR and matching .json sidecar for user scope', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const customConfigDir = path.join(homeDir, '.claude-2');
   const originalHome = process.env.HOME;
   const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
@@ -1032,7 +1032,7 @@ test('countConfigs uses CLAUDE_CONFIG_DIR and matching .json sidecar for user sc
 });
 
 test('countConfigs still counts project .claude when cwd is home and CLAUDE_CONFIG_DIR points elsewhere', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const customConfigDir = path.join(homeDir, '.claude-2');
   const originalHome = process.env.HOME;
   const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
@@ -1073,7 +1073,7 @@ test('countConfigs still counts project .claude when cwd is home and CLAUDE_CONF
 });
 
 test('countConfigs avoids home cwd double-counting across counters and keeps CLAUDE.local.md', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1106,7 +1106,7 @@ test('countConfigs avoids home cwd double-counting across counters and keeps CLA
 });
 
 test('countConfigs excludes disabled user-scope MCPs', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1134,8 +1134,8 @@ test('countConfigs excludes disabled user-scope MCPs', async () => {
 });
 
 test('countConfigs excludes disabled project .mcp.json servers', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
-  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-project-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
+  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-project-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1166,7 +1166,7 @@ test('countConfigs excludes disabled project .mcp.json servers', async () => {
 });
 
 test('countConfigs handles all MCPs disabled', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1194,7 +1194,7 @@ test('countConfigs handles all MCPs disabled', async () => {
 });
 
 test('countConfigs tolerates rule directory read errors', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1213,7 +1213,7 @@ test('countConfigs tolerates rule directory read errors', async () => {
 });
 
 test('countConfigs ignores non-string values in disabledMcpServers', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1241,8 +1241,8 @@ test('countConfigs ignores non-string values in disabledMcpServers', async () =>
 });
 
 test('countConfigs counts same-named servers in different scopes separately', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
-  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-project-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
+  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-project-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1275,7 +1275,7 @@ test('countConfigs counts same-named servers in different scopes separately', as
 });
 
 test('countConfigs uses case-sensitive matching for disabled servers', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1305,9 +1305,9 @@ test('countConfigs uses case-sensitive matching for disabled servers', async () 
 
 // Regression test for GitHub Issue #3:
 // "MCP count showing 5 when user has 6, still showing 5 when all disabled"
-// https://github.com/jarrodwatts/claude-hud/issues/3
+// https://github.com/jarrodwatts/claude-hub-new/issues/3
 test('Issue #3: MCP count updates correctly when servers are disabled', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-home-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-home-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1380,11 +1380,11 @@ test('Issue #3: MCP count updates correctly when servers are disabled', async ()
 // === Config cache tests ===
 
 async function getConfigCacheDir(configDir) {
-  return path.join(configDir, 'plugins', 'claude-hud', 'config-cache');
+  return path.join(configDir, 'plugins', 'claude-hub-new', 'config-cache');
 }
 
 test('countConfigs cache: second call uses cache (mtime unchanged)', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1425,7 +1425,7 @@ test('countConfigs cache: second call uses cache (mtime unchanged)', async () =>
 });
 
 test('countConfigs cache: miss on file modification (mtime changes)', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1460,7 +1460,7 @@ test('countConfigs cache: miss on file modification (mtime changes)', async () =
 });
 
 test('countConfigs cache: miss on file creation (CLAUDE.md appears)', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1482,7 +1482,7 @@ test('countConfigs cache: miss on file creation (CLAUDE.md appears)', async () =
 });
 
 test('countConfigs cache: miss on file deletion (CLAUDE.md removed)', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1505,8 +1505,8 @@ test('countConfigs cache: miss on file deletion (CLAUDE.md removed)', async () =
 });
 
 test('countConfigs cache: miss on nested rules additions', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
-  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-proj-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
+  const projectDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-proj-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1530,9 +1530,9 @@ test('countConfigs cache: miss on nested rules additions', async () => {
 });
 
 test('countConfigs cache: isolation between different cwds', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
-  const projectA = await mkdtemp(path.join(tmpdir(), 'claude-hud-projA-'));
-  const projectB = await mkdtemp(path.join(tmpdir(), 'claude-hud-projB-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
+  const projectA = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-projA-'));
+  const projectB = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-projB-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1560,7 +1560,7 @@ test('countConfigs cache: isolation between different cwds', async () => {
 });
 
 test('countConfigs cache: isolation between different CLAUDE_CONFIG_DIRs', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const configA = path.join(homeDir, '.claude-a');
   const configB = path.join(homeDir, '.claude-b');
   const originalHome = process.env.HOME;
@@ -1589,7 +1589,7 @@ test('countConfigs cache: isolation between different CLAUDE_CONFIG_DIRs', async
 });
 
 test('countConfigs cache: corrupted cache file handled gracefully', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1618,7 +1618,7 @@ test('countConfigs cache: corrupted cache file handled gracefully', async () => 
 });
 
 test('countConfigs cache: malformed cache payload falls back to fresh recompute', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1666,7 +1666,7 @@ test('countConfigs cache: malformed cache payload falls back to fresh recompute'
 });
 
 test('countConfigs cache: first invocation without cache dir', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 
@@ -1697,7 +1697,7 @@ test('countConfigs cache: first invocation without cache dir', async () => {
 });
 
 test('countConfigs cache: works without cwd (user scope only)', async () => {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-cc-'));
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-cc-'));
   const originalHome = process.env.HOME;
   process.env.HOME = homeDir;
 

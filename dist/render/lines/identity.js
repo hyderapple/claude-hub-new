@@ -2,7 +2,7 @@ import { getContextPercent, getBufferedPercent, getTotalTokens, } from "../../st
 import { coloredBar, label, getContextColor, RESET } from "../colors.js";
 import { getAdaptiveBarWidth } from "../../utils/terminal.js";
 import { t } from "../../i18n/index.js";
-const DEBUG = process.env.DEBUG?.includes("claude-hud") || process.env.DEBUG === "*";
+const DEBUG = process.env.DEBUG?.includes("claude-hub-new") || process.env.DEBUG === "*";
 export function renderIdentityLine(ctx) {
     const rawPercent = getContextPercent(ctx.stdin);
     const bufferedPercent = getBufferedPercent(ctx.stdin);
@@ -10,7 +10,7 @@ export function renderIdentityLine(ctx) {
     const percent = autocompactMode === "disabled" ? rawPercent : bufferedPercent;
     const colors = ctx.config?.colors;
     if (DEBUG && autocompactMode === "disabled") {
-        console.error(`[claude-hud:context] autocompactBuffer=disabled, showing raw ${rawPercent}% (buffered would be ${bufferedPercent}%)`);
+        console.error(`[claude-hub-new:context] autocompactBuffer=disabled, showing raw ${rawPercent}% (buffered would be ${bufferedPercent}%)`);
     }
     const display = ctx.config?.display;
     const contextValueMode = display?.contextValue ?? "percent";

@@ -99,10 +99,10 @@ function withTerminal(columns, fn) {
 }
 
 async function withDeterministicSpeedCache(fn) {
-  const tempConfigDir = await mkdtemp(path.join(tmpdir(), 'claude-hud-render-'));
+  const tempConfigDir = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-render-'));
   const originalConfigDir = process.env.CLAUDE_CONFIG_DIR;
   const originalNow = Date.now;
-  const cachePath = path.join(tempConfigDir, 'plugins', 'claude-hud', '.speed-cache.json');
+  const cachePath = path.join(tempConfigDir, 'plugins', 'claude-hub-new', '.speed-cache.json');
 
   process.env.CLAUDE_CONFIG_DIR = tempConfigDir;
   await mkdir(path.dirname(cachePath), { recursive: true });

@@ -7,6 +7,8 @@ export const en = {
     "label.rules": "rules",
     "label.hooks": "hooks",
     "label.estimatedCost": "Est.",
+    "label.tip": "Tip",
+    "label.hint": "Hint",
     // Status
     "status.limitReached": "Limit reached",
     "status.allTodosComplete": "All todos complete",
@@ -18,7 +20,7 @@ export const en = {
     "format.out": "out",
     "format.tokPerSec": "tok/s",
     // Init
-    "init.initializing": "[claude-hud] Initializing...",
-    "init.macosNote": "[claude-hud] Note: On macOS, you may need to restart Claude Code for the HUD to appear.",
+    "init.initializing": "[claude-hub-new] Initializing...",
+    "init.macosNote": "[claude-hub-new] Note: On macOS, you may need to restart Claude Code for the HUD to appear.",
 };
 //# sourceMappingURL=en.js.map

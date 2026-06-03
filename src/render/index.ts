@@ -13,6 +13,7 @@ import {
   renderUsageLine,
   renderMemoryLine,
   renderSessionTokensLine,
+  renderTutorialLine,
 } from './lines/index.js';
 import { dim, RESET } from './colors.js';
 import { UNKNOWN_TERMINAL_WIDTH } from '../utils/terminal.js';
@@ -353,6 +354,8 @@ function renderElementLine(ctx: RenderContext, element: HudElement): string | nu
       return renderMemoryLine(ctx);
     case 'environment':
       return renderEnvironmentLine(ctx);
+    case 'tutorial':
+      return renderTutorialLine(ctx);
     case 'tools':
       return display?.showTools === false ? null : renderToolsLine(ctx);
     case 'agents':

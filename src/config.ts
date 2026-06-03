@@ -17,7 +17,7 @@ export type ContextValueMode = 'percent' | 'tokens' | 'remaining' | 'both';
  *   short:   Strip context suffix AND "Claude " prefix (e.g. "Opus 4.6")
  */
 export type ModelFormatMode = 'full' | 'compact' | 'short';
-export type HudElement = 'project' | 'context' | 'usage' | 'memory' | 'environment' | 'tools' | 'agents' | 'todos';
+export type HudElement = 'project' | 'context' | 'usage' | 'memory' | 'environment' | 'tutorial' | 'tools' | 'agents' | 'todos';
 export type HudColorName =
   | 'dim'
   | 'red'
@@ -51,6 +51,7 @@ export const DEFAULT_ELEMENT_ORDER: HudElement[] = [
   'usage',
   'memory',
   'environment',
+  'tutorial',
   'tools',
   'agents',
   'todos',
@@ -58,12 +59,29 @@ export const DEFAULT_ELEMENT_ORDER: HudElement[] = [
 
 const KNOWN_ELEMENTS = new Set<HudElement>(DEFAULT_ELEMENT_ORDER);
 
+/**
+ * Tutorial / hint bar settings. The bar surfaces context-aware hints
+ * (high priority) and otherwise rotates general tips on a timer.
+ */
+export interface TutorialConfig {
+  enabled: boolean;
+  /** Seconds each tip/hint stays before rotating (>= 1). */
+  rotateSeconds: number;
+  /** Context-window used-% at/above which to suggest /compact (0-100). */
+  contextThreshold: number;
+  /** Rate-limit used-% at/above which to warn about quota (0-100). */
+  rateThreshold: number;
+  /** User-supplied tips, shown before the built-in ones. */
+  extraTips: string[];
+}
+
 export interface HudConfig {
   language: Language;
   lineLayout: LineLayoutType;
   showSeparators: boolean;
   pathLevels: 1 | 2 | 3;
   elementOrder: HudElement[];
+  tutorial: TutorialConfig;
   gitStatus: {
     enabled: boolean;
     showDirty: boolean;
@@ -109,6 +127,13 @@ export const DEFAULT_CONFIG: HudConfig = {
   showSeparators: false,
   pathLevels: 1,
   elementOrder: [...DEFAULT_ELEMENT_ORDER],
+  tutorial: {
+    enabled: true,
+    rotateSeconds: 30,
+    contextThreshold: 85,
+    rateThreshold: 80,
+    extraTips: [],
+  },
   gitStatus: {
     enabled: true,
     showDirty: true,
@@ -276,6 +301,29 @@ function validateCountThreshold(value: unknown): number {
   return Math.max(0, Math.floor(value));
 }
 
+/** Threshold that falls back to a default (not 0) when unset/invalid. */
+function validateThresholdOr(value: unknown, fallback: number): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
+  return Math.max(0, Math.min(100, value));
+}
+
+function validateTutorial(value: unknown): TutorialConfig {
+  const v = (value && typeof value === 'object' ? value : {}) as Partial<TutorialConfig>;
+  const rotateSeconds = typeof v.rotateSeconds === 'number' && Number.isFinite(v.rotateSeconds)
+    ? Math.max(1, Math.min(3600, Math.floor(v.rotateSeconds)))
+    : DEFAULT_CONFIG.tutorial.rotateSeconds;
+  const extraTips = Array.isArray(v.extraTips)
+    ? v.extraTips.filter((t): t is string => typeof t === 'string').map(t => t.slice(0, 200)).slice(0, 50)
+    : [];
+  return {
+    enabled: typeof v.enabled === 'boolean' ? v.enabled : DEFAULT_CONFIG.tutorial.enabled,
+    rotateSeconds,
+    contextThreshold: validateThresholdOr(v.contextThreshold, DEFAULT_CONFIG.tutorial.contextThreshold),
+    rateThreshold: validateThresholdOr(v.rateThreshold, DEFAULT_CONFIG.tutorial.rateThreshold),
+    extraTips,
+  };
+}
+
 export function mergeConfig(userConfig: Partial<HudConfig>): HudConfig {
   const migrated = migrateConfig(userConfig);
   const language = validateLanguage(migrated.language)
@@ -295,6 +343,8 @@ export function mergeConfig(userConfig: Partial<HudConfig>): HudConfig {
     : DEFAULT_CONFIG.pathLevels;
 
   const elementOrder = validateElementOrder(migrated.elementOrder);
+
+  const tutorial = validateTutorial(migrated.tutorial);
 
   const gitStatus = {
     enabled: typeof migrated.gitStatus?.enabled === 'boolean'
@@ -424,7 +474,7 @@ export function mergeConfig(userConfig: Partial<HudConfig>): HudConfig {
       : DEFAULT_CONFIG.colors.custom,
   };
 
-  return { language, lineLayout, showSeparators, pathLevels, elementOrder, gitStatus, display, colors };
+  return { language, lineLayout, showSeparators, pathLevels, elementOrder, tutorial, gitStatus, display, colors };
 }
 
 export async function loadConfig(): Promise<HudConfig> {

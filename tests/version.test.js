@@ -65,7 +65,7 @@ test('_getClaudeVersionInvocation executes .exe paths directly on Windows', () =
 });
 
 test('getClaudeCodeVersion persists cache across process resets under CLAUDE_CONFIG_DIR', async () => {
-  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hud-version-'));
+  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-version-'));
   const customConfigDir = path.join(tempHome, '.claude-alt');
   const binaryPath = path.join(tempHome, 'claude');
   const originalHome = process.env.HOME;
@@ -94,7 +94,7 @@ test('getClaudeCodeVersion persists cache across process resets under CLAUDE_CON
     assert.equal(execCalls, 1);
     assert.equal(resolveCalls, 1);
 
-    const cachePath = path.join(customConfigDir, 'plugins', 'claude-hud', '.claude-code-version-cache.json');
+    const cachePath = path.join(customConfigDir, 'plugins', 'claude-hub-new', '.claude-code-version-cache.json');
     assert.equal(existsSync(cachePath), true);
 
     _resetVersionCache();
@@ -119,7 +119,7 @@ test('getClaudeCodeVersion persists cache across process resets under CLAUDE_CON
 });
 
 test('getClaudeCodeVersion refreshes when the Claude binary mtime changes', async () => {
-  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hud-version-invalidate-'));
+  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-version-invalidate-'));
   const customConfigDir = path.join(tempHome, '.claude-alt');
   const binaryPath = path.join(tempHome, 'claude');
   const originalHome = process.env.HOME;
@@ -158,7 +158,7 @@ test('getClaudeCodeVersion refreshes when the Claude binary mtime changes', asyn
 });
 
 test('getClaudeCodeVersion executes the resolved binary path', async () => {
-  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hud-version-windows-'));
+  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-version-windows-'));
   const customConfigDir = path.join(tempHome, '.claude-alt');
   const binaryPath = path.join(tempHome, 'claude.cmd');
   const originalHome = process.env.HOME;
@@ -190,7 +190,7 @@ test('getClaudeCodeVersion executes the resolved binary path', async () => {
 });
 
 test('getClaudeCodeVersion uses the Windows wrapper invocation for .cmd binaries', async () => {
-  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hud-version-wrapper-'));
+  const tempHome = await mkdtemp(path.join(tmpdir(), 'claude-hub-new-version-wrapper-'));
   const customConfigDir = path.join(tempHome, '.claude-alt');
   const binaryPath = path.join(tempHome, 'claude.cmd');
   const originalHome = process.env.HOME;

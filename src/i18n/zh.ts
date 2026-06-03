@@ -9,6 +9,8 @@ export const zh: Messages = {
   "label.rules": "规则",
   "label.hooks": "钩子",
   "label.estimatedCost": "估算",
+  "label.tip": "教學",
+  "label.hint": "提示",
 
   // Status
   "status.limitReached": "已达上限",
@@ -23,7 +25,7 @@ export const zh: Messages = {
   "format.tokPerSec": "tok/s",
 
   // Init
-  "init.initializing": "[claude-hud] 正在初始化...",
+  "init.initializing": "[claude-hub-new] 正在初始化...",
   "init.macosNote":
-    "[claude-hud] 注意：在 macOS 上，您可能需要重启 Claude Code 才能显示 HUD。",
+    "[claude-hub-new] 注意：在 macOS 上，您可能需要重启 Claude Code 才能显示 HUD。",
 };

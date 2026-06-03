@@ -33,11 +33,23 @@ test("CLI renders expected output for a basic transcript", async (t) => {
   );
   const expected = readFileSync(expectedPath, "utf8").trimEnd();
 
-  const homeDir = await mkdtemp(path.join(tmpdir(), "claude-hud-home-"));
+  const homeDir = await mkdtemp(path.join(tmpdir(), "claude-hub-new-home-"));
   // Use a fixed 3-level path for deterministic test output
   const projectDir = path.join(homeDir, "dev", "apps", "my-project");
   await import("node:fs/promises").then((fs) =>
     fs.mkdir(projectDir, { recursive: true }),
+  );
+  // The tutorial bar is on by default and rotates by wall-clock time, which
+  // would make this core-render snapshot non-deterministic. Disable it here so
+  // the snapshot stays focused on the model/context/etc. lines.
+  const pluginDir = path.join(homeDir, ".claude", "plugins", "claude-hub-new");
+  await import("node:fs/promises").then((fs) =>
+    fs.mkdir(pluginDir, { recursive: true }),
+  );
+  await writeFile(
+    path.join(pluginDir, "config.json"),
+    JSON.stringify({ tutorial: { enabled: false } }),
+    "utf8",
   );
   try {
     const stdin = JSON.stringify({
@@ -90,7 +102,7 @@ test("CLI prints initializing message on empty stdin", (t) => {
     .replace(/\u00A0/g, " ")
     .trimEnd();
   assert.ok(
-    normalized.startsWith("[claude-hud] Initializing..."),
+    normalized.startsWith("[claude-hub-new] Initializing..."),
     `unexpected output: ${normalized}`,
   );
 });

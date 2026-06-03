@@ -7,6 +7,8 @@ export const zh = {
     "label.rules": "规则",
     "label.hooks": "钩子",
     "label.estimatedCost": "估算",
+    "label.tip": "教學",
+    "label.hint": "提示",
     // Status
     "status.limitReached": "已达上限",
     "status.allTodosComplete": "全部完成",
@@ -18,7 +20,7 @@ export const zh = {
     "format.out": "输出",
     "format.tokPerSec": "tok/s",
     // Init
-    "init.initializing": "[claude-hud] 正在初始化...",
-    "init.macosNote": "[claude-hud] 注意：在 macOS 上，您可能需要重启 Claude Code 才能显示 HUD。",
+    "init.initializing": "[claude-hub-new] 正在初始化...",
+    "init.macosNote": "[claude-hub-new] 注意：在 macOS 上，您可能需要重启 Claude Code 才能显示 HUD。",
 };
 //# sourceMappingURL=zh.js.map

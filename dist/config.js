@@ -8,6 +8,7 @@ export const DEFAULT_ELEMENT_ORDER = [
     'usage',
     'memory',
     'environment',
+    'tutorial',
     'tools',
     'agents',
     'todos',
@@ -19,6 +20,13 @@ export const DEFAULT_CONFIG = {
     showSeparators: false,
     pathLevels: 1,
     elementOrder: [...DEFAULT_ELEMENT_ORDER],
+    tutorial: {
+        enabled: true,
+        rotateSeconds: 30,
+        contextThreshold: 85,
+        rateThreshold: 80,
+        extraTips: [],
+    },
     gitStatus: {
         enabled: true,
         showDirty: true,
@@ -169,6 +177,28 @@ function validateCountThreshold(value) {
     }
     return Math.max(0, Math.floor(value));
 }
+/** Threshold that falls back to a default (not 0) when unset/invalid. */
+function validateThresholdOr(value, fallback) {
+    if (typeof value !== 'number' || !Number.isFinite(value))
+        return fallback;
+    return Math.max(0, Math.min(100, value));
+}
+function validateTutorial(value) {
+    const v = (value && typeof value === 'object' ? value : {});
+    const rotateSeconds = typeof v.rotateSeconds === 'number' && Number.isFinite(v.rotateSeconds)
+        ? Math.max(1, Math.min(3600, Math.floor(v.rotateSeconds)))
+        : DEFAULT_CONFIG.tutorial.rotateSeconds;
+    const extraTips = Array.isArray(v.extraTips)
+        ? v.extraTips.filter((t) => typeof t === 'string').map(t => t.slice(0, 200)).slice(0, 50)
+        : [];
+    return {
+        enabled: typeof v.enabled === 'boolean' ? v.enabled : DEFAULT_CONFIG.tutorial.enabled,
+        rotateSeconds,
+        contextThreshold: validateThresholdOr(v.contextThreshold, DEFAULT_CONFIG.tutorial.contextThreshold),
+        rateThreshold: validateThresholdOr(v.rateThreshold, DEFAULT_CONFIG.tutorial.rateThreshold),
+        extraTips,
+    };
+}
 export function mergeConfig(userConfig) {
     const migrated = migrateConfig(userConfig);
     const language = validateLanguage(migrated.language)
@@ -184,6 +214,7 @@ export function mergeConfig(userConfig) {
         ? migrated.pathLevels
         : DEFAULT_CONFIG.pathLevels;
     const elementOrder = validateElementOrder(migrated.elementOrder);
+    const tutorial = validateTutorial(migrated.tutorial);
     const gitStatus = {
         enabled: typeof migrated.gitStatus?.enabled === 'boolean'
             ? migrated.gitStatus.enabled
@@ -309,7 +340,7 @@ export function mergeConfig(userConfig) {
             ? migrated.colors.custom
             : DEFAULT_CONFIG.colors.custom,
     };
-    return { language, lineLayout, showSeparators, pathLevels, elementOrder, gitStatus, display, colors };
+    return { language, lineLayout, showSeparators, pathLevels, elementOrder, tutorial, gitStatus, display, colors };
 }
 export async function loadConfig() {
     const configPath = getConfigPath();

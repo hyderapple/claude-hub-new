@@ -1,17 +1,17 @@
 {
-  "name": "claude-hud",
-  "description": "Real-time statusline HUD for Claude Code - context health, tool activity, agent tracking, and todo progress",
-  "version": "0.0.12",
+  "name": "claude-hub-new",
+  "description": "Statusline HUD for Claude Code with a context-aware tutorial/hint bar — context health, tool activity, agent tracking, todo progress, plus rotating tips. Fork of claude-hud by Jarrod Watts.",
+  "version": "0.1.0",
   "author": {
-    "name": "Jarrod Watts",
-    "url": "https://github.com/jarrodwatts"
+    "name": "hyderapple",
+    "url": "https://github.com/hyderapple"
   },
   "commands": [
     "./commands/setup.md",
     "./commands/configure.md"
   ],
-  "homepage": "https://github.com/jarrodwatts/claude-hud",
-  "repository": "https://github.com/jarrodwatts/claude-hud",
+  "homepage": "https://github.com/hyderapple/claude-hub-new",
+  "repository": "https://github.com/hyderapple/claude-hub-new",
   "license": "MIT",
-  "keywords": ["hud", "monitoring", "statusline", "context", "tools", "agents", "todos", "claude-code"]
+  "keywords": ["hud", "monitoring", "statusline", "context", "tools", "agents", "todos", "tutorial", "tips", "claude-code"]
 }

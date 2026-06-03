@@ -9,7 +9,7 @@ import { getAdaptiveBarWidth } from "../../utils/terminal.js";
 import { t } from "../../i18n/index.js";
 
 const DEBUG =
-  process.env.DEBUG?.includes("claude-hud") || process.env.DEBUG === "*";
+  process.env.DEBUG?.includes("claude-hub-new") || process.env.DEBUG === "*";
 
 export function renderIdentityLine(ctx: RenderContext): string {
   const rawPercent = getContextPercent(ctx.stdin);
@@ -20,7 +20,7 @@ export function renderIdentityLine(ctx: RenderContext): string {
 
   if (DEBUG && autocompactMode === "disabled") {
     console.error(
-      `[claude-hud:context] autocompactBuffer=disabled, showing raw ${rawPercent}% (buffered would be ${bufferedPercent}%)`,
+      `[claude-hub-new:context] autocompactBuffer=disabled, showing raw ${rawPercent}% (buffered would be ${bufferedPercent}%)`,
     );
   }
 
