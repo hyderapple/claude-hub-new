@@ -189,16 +189,38 @@ Use the macOS/Linux bash command format above, but on Windows prefer `node` firs
 
 3. Check if runtime is bun (by filename). If bun, use `src\index.ts`. Otherwise use `dist\index.js`.
 
-4. Generate command (note: quotes around runtime path handle spaces in paths):
+4. Generate the statusLine via a **launcher script** — do NOT inline the version-lookup logic into the `command` string.
+
+   **Why a launcher (important):** an inlined `powershell -Command "& {... '...'}"` command contains nested double-and-single quotes. When Claude Code spawns the statusLine on Windows, those nested quotes get mangled by the intermediate shell, the process fails to start, and the HUD renders as a **completely blank line** (no error, no garbled text — just nothing). Writing the logic to a `.ps1` and invoking it with a single clean quoted path (`-File "..."`) eliminates all nested quoting, so there is nothing for the shell to break. The launcher still does the dynamic version lookup internally, so plugin auto-updates keep working.
+
+   **Step 4a — Write the launcher script** to `claude-hub-hud.ps1` inside the Claude config directory (`$env:CLAUDE_CONFIG_DIR` when set, otherwise `Join-Path $HOME ".claude"`). Use a real file write (Write/Edit tool), not string concatenation.
+
+   **When runtime is node**, the launcher content is:
+   ```powershell
+   $ErrorActionPreference = 'Stop'
+   $claudeDir = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME ".claude" }
+   $p = (Get-ChildItem (Join-Path $claudeDir "plugins\cache\claude-hub-new\claude-hub-new") -Directory |
+           Where-Object { $_.Name -match '^\d+(\.\d+)+$' } |
+           Sort-Object { [version]$_.Name } -Descending |
+           Select-Object -First 1).FullName
+   # node inherits this script's stdin (the session JSON Claude Code pipes in)
+   & "{RUNTIME_PATH}" (Join-Path $p "dist\index.js")
+   ```
 
    **When runtime is bun** - add `--env-file NUL` to prevent Bun from auto-loading project `.env` files:
-   ```
-   powershell -Command "& {$claudeDir=if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME '.claude' }; $p=(Get-ChildItem (Join-Path $claudeDir 'plugins\cache\claude-hub-new\claude-hub-new') -Directory | Where-Object { $_.Name -match '^\d+(\.\d+)+$' } | Sort-Object { [version]$_.Name } -Descending | Select-Object -First 1).FullName; & '{RUNTIME_PATH}' '--env-file' 'NUL' (Join-Path $p '{SOURCE}')}"
+   ```powershell
+   $ErrorActionPreference = 'Stop'
+   $claudeDir = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME ".claude" }
+   $p = (Get-ChildItem (Join-Path $claudeDir "plugins\cache\claude-hub-new\claude-hub-new") -Directory |
+           Where-Object { $_.Name -match '^\d+(\.\d+)+$' } |
+           Sort-Object { [version]$_.Name } -Descending |
+           Select-Object -First 1).FullName
+   & "{RUNTIME_PATH}" --env-file NUL (Join-Path $p "src\index.ts")
    ```
 
-   **When runtime is node**:
+   **Step 4b — The generated command** is just a clean `-File` invocation of that launcher (substitute the real config dir for `{CLAUDE_DIR}`):
    ```
-   powershell -Command "& {$claudeDir=if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME '.claude' }; $p=(Get-ChildItem (Join-Path $claudeDir 'plugins\cache\claude-hub-new\claude-hub-new') -Directory | Where-Object { $_.Name -match '^\d+(\.\d+)+$' } | Sort-Object { [version]$_.Name } -Descending | Select-Object -First 1).FullName; & '{RUNTIME_PATH}' (Join-Path $p '{SOURCE}')}"
+   powershell -NoProfile -ExecutionPolicy Bypass -File "{CLAUDE_DIR}\claude-hub-hud.ps1"
    ```
 
 **WSL (Windows Subsystem for Linux)**: If running in WSL, use the macOS/Linux instructions. Ensure the plugin is installed in the Linux environment (`${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plugins/...`), not the Windows side.
@@ -297,6 +319,7 @@ Use AskUserQuestion:
    - Read settings file (`${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json` on bash, or `settings.json` inside `$env:CLAUDE_CONFIG_DIR` when set, otherwise `Join-Path $HOME ".claude"` on PowerShell)
    - Check statusLine.command exists and looks correct
    - If command contains a hardcoded version path (not using the dynamic version-lookup command), it may be a stale config from a previous setup
+   - **Windows:** if the command is an inline `powershell -Command "& {...}"` block (with nested quotes) instead of a `-File "...\claude-hub-hud.ps1"` invocation, it is a stale/fragile config from an older setup — regenerate it via Step 4 (launcher script). Inline nested-quote commands silently fail to spawn on Windows and render a blank line.
 
 3. **Test the command manually** and capture error output:
    ```bash
@@ -310,6 +333,11 @@ Use AskUserQuestion:
    - On macOS with mise/nvm/asdf: the absolute path may have changed after a runtime update
    - Symlinks may be stale: `command -v node` often returns a symlink that can break after version updates
    - Solution: re-detect with `command -v bun` or `command -v node`, and verify with `realpath {RUNTIME_PATH}` (or `readlink -f {RUNTIME_PATH}`) to get the true absolute path
+
+   **Windows: HUD renders as a completely blank line (no error, no garbled text)**:
+   - Almost always an inline `powershell -Command "& {...}"` statusLine whose nested quotes were mangled when Claude Code spawned it, so the process never started.
+   - Confirm the launcher exists: the config dir should contain `claude-hub-hud.ps1`, and `statusLine.command` should be `powershell -NoProfile -ExecutionPolicy Bypass -File "...\claude-hub-hud.ps1"`.
+   - Solution: regenerate via Step 4 (write the launcher script, repoint statusLine at it), then fully restart Claude Code.
 
    **"No such file or directory" for plugin**:
    - Plugin might not be installed: `ls "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plugins/cache/claude-hub-new/"`

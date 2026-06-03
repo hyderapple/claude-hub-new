@@ -1,7 +1,7 @@
 {
   "name": "claude-hub-new",
   "description": "Statusline HUD for Claude Code with a context-aware tutorial/hint bar — context health, tool activity, agent tracking, todo progress, plus rotating tips. Fork of claude-hud by Jarrod Watts.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "hyderapple",
     "url": "https://github.com/hyderapple"

@@ -3,6 +3,18 @@
 All notable changes to claude-hub-new will be documented in this file.
 claude-hub-new is a fork of [claude-hud](https://github.com/jarrodwatts/claude-hud); entries below 0.1.0 are inherited from upstream.
 
+## [0.1.2] - 2026-06-03
+
+### Fixed
+- **Windows: HUD rendered as a completely blank line after `/claude-hub-new:setup`.**
+  The setup command generated an inline `powershell -Command "& {...}"` statusLine whose
+  nested double/single quotes got mangled when Claude Code spawned the process on Windows,
+  so it silently failed to start (no error, just a blank line). Setup now writes a
+  `claude-hub-hud.ps1` launcher to the Claude config dir and points `statusLine` at it via
+  `-File "...\claude-hub-hud.ps1"` — a single clean quoted path with no nested quoting for
+  the shell to break. The launcher still does dynamic version lookup, so auto-update is
+  unaffected. macOS/Linux/Git-Bash setup is unchanged.
+
 ## [0.1.1] - 2026-06-03
 
 ### Changed
