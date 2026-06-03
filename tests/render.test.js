@@ -1073,7 +1073,7 @@ test('renderUsageLine translates labels when Chinese is enabled', () => {
   try {
     const line = stripAnsi(renderUsageLine(ctx) ?? '');
     assert.ok(line.includes('用量'));
-    assert.ok(line.includes('重置剩余'));
+    assert.ok(line.includes('重置剩餘'));
   } finally {
     setLanguage('en');
   }
@@ -1243,8 +1243,8 @@ test('renderUsageLine translates weekly label when Chinese is enabled', () => {
   setLanguage('zh');
   try {
     const line = stripAnsi(renderUsageLine(ctx) ?? '');
-    assert.ok(line.includes('本周'));
-    assert.ok(line.includes('重置剩余'));
+    assert.ok(line.includes('本週'));
+    assert.ok(line.includes('重置剩餘'));
   } finally {
     setLanguage('en');
   }

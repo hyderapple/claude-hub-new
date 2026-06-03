@@ -3,6 +3,20 @@
 All notable changes to claude-hub-new will be documented in this file.
 claude-hub-new is a fork of [claude-hud](https://github.com/jarrodwatts/claude-hud); entries below 0.1.0 are inherited from upstream.
 
+## [0.1.1] - 2026-06-03
+
+### Changed
+- **Default language is now Traditional Chinese (`zh`).** New installs show the HUD in
+  Traditional Chinese out of the box; set `"language": "en"` in
+  `~/.claude/plugins/claude-hub-new/config.json` for English.
+
+### Fixed
+- Traditional Chinese (`zh`) message catalog had Simplified-Chinese and Mainland-terminology
+  leakage. Converted to proper Taiwan Traditional Chinese: `本周→本週`, `规则→規則`,
+  `钩子→鉤子`, `已达上限→已達上限`, `重置于→重置於`, `重置剩余→重置剩餘`,
+  `输入→輸入`, `输出→輸出`, `重启→重啟`, `显示→顯示`, and term fixes `内存→記憶體` (RAM),
+  `缓存→快取` (cache).
+
 ## [0.1.0] - 2026-06-03
 
 ### Added

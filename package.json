@@ -1,6 +1,6 @@
 {
   "name": "claude-hub-new",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Statusline HUD for Claude Code with a context-aware tutorial/hint bar. Fork of claude-hud by Jarrod Watts.",
   "type": "module",
   "repository": {

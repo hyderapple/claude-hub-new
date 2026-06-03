@@ -102,7 +102,7 @@ test("CLI prints initializing message on empty stdin", (t) => {
     .replace(/\u00A0/g, " ")
     .trimEnd();
   assert.ok(
-    normalized.startsWith("[claude-hub-new] Initializing..."),
+    normalized.startsWith("[claude-hub-new] 正在初始化..."),
     `unexpected output: ${normalized}`,
   );
 });

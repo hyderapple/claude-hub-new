@@ -120,7 +120,7 @@ test("index entrypoint runs when executed directly", async () => {
     });
   }
 
-  assert.ok(logs.some((line) => line.includes("[claude-hub-new] Initializing...")));
+  assert.ok(logs.some((line) => line.includes("[claude-hub-new] 正在初始化...")));
 });
 
 test("main executes the happy path with default dependencies", async () => {
